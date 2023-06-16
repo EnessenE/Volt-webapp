@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
+import { Chat } from 'src/app/classes/chat';
+import { ChatMessage } from 'src/app/classes/chat-message';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -33,6 +35,7 @@ export class PersonalChatComponent implements OnInit {
     var data = await this.connection.invoke<Chat>("GetChat");
     console.log(data);
     this.currentChat = data;
+    
     this.connection.on("ReceiveChatMessage", (data: ChatMessage) => {
       console.log(data);
       this.currentChat.messages.push(data);
@@ -45,17 +48,4 @@ export class PersonalChatComponent implements OnInit {
     }
     this.connection.invoke("SendChat", chatMessage)
   }
-}
-
-class ChatMessage {
-  message!: string;
-}
-class Account {
-  username!: string;
-  discriminator!: number;
-}
-class Chat {
-  messages!: ChatMessage[];
-  sender!: Account;
-  receiver!: Account;
 }

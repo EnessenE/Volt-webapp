@@ -9,7 +9,7 @@
 
     <ng-template #chat>
         <tr *ngFor="let chatMessage of currentChat.messages">
-            <app-chat chatMessage="chatMessage"></app-chat>
+            <app-chat [currentChat]="currentChat" [chatMessage]="chatMessage"></app-chat>
         </tr>
     </ng-template>
     <ng-template #empty_chat>
@@ -21,4 +21,4 @@
     <label for="chatmessage">Chat Message:</label>
     <input type="text" id="chatmessage" [(ngModel)]="latestMessage" name="chatmessage">
     <button type="submit">Submit</button>
-</form>
+</form> 
