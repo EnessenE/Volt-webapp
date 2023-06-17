@@ -2,7 +2,7 @@ import { Account } from "./account";
 import { ChatMessage } from "./chat-message";
 
 export class Chat {
+    id!: string;
     messages!: ChatMessage[];
-    sender!: Account;
-    receiver!: Account;
+    members!:Account[];
 }

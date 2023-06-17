@@ -1,0 +1,16 @@
+<div *ngIf="user">
+</div>
+
+<div class="scrollable-div">
+    <ng-template *ngIf="user;then userfound else nouserfound">
+    </ng-template>
+
+    <ng-template #userfound>
+        <h1>{{user.username}}#{{user.discriminator}}</h1>
+        <p>ID: {{user.id}}</p>
+    </ng-template>
+    <ng-template #nouserfound>
+        <h1>We couldn't figure out who this is</h1>
+    </ng-template>
+
+</div>

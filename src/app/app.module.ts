@@ -12,6 +12,9 @@ import { LoginComponent } from './components/login/login.component';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/auth-interceptor';
 import { SignupComponent } from './components/signup/signup.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { WebsocketService } from './services/websocket.service';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +23,9 @@ import { SignupComponent } from './components/signup/signup.component';
     PersonalChatComponent,
     ChatComponent,
     LoginComponent,
-    SignupComponent
+    SignupComponent,
+    DashboardComponent,
+    UserProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -31,6 +36,7 @@ import { SignupComponent } from './components/signup/signup.component';
     HttpClientModule
   ],
   providers: [
+    WebsocketService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

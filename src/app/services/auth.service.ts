@@ -14,7 +14,7 @@ import { SignupRequest } from '../classes/signup-request';
 export class AuthService {
   endpoint: string = environment.apiServer + '/v1/auth';
   headers: any;// = new HttpHeaders().set('Content-Type', 'application/json');
-  currentUser = {};
+  currentUser: Account | undefined;
 
   constructor(private http: HttpClient, public router: Router) { }
   // Sign-up
@@ -24,6 +24,11 @@ export class AuthService {
       .subscribe(res => {
         console.log("Saving new token")
         localStorage.setItem('volttoken', res.token);
+
+        this.currentUser = res;
+        localStorage.setItem('user', JSON.stringify(this.currentUser));
+
+        this.router.navigate(['dash/']);
         // this.getUserProfile(res.token).subscribe((res) => {
         //   this.currentUser = res;
         //   this.router.navigate(['user-profile/' + res.msg._id]);
@@ -37,6 +42,10 @@ export class AuthService {
       .subscribe(res => {
         console.log("Saving login token");
         localStorage.setItem('volttoken', res.token);
+        
+        this.currentUser = res;
+        localStorage.setItem('user', JSON.stringify(this.currentUser));
+        this.router.navigate(['dash/']);
         // this.getUserProfile(res.token).subscribe((res) => {
         //   this.currentUser = res;
         //   this.router.navigate(['user-profile/' + res.msg._id]);
@@ -50,7 +59,9 @@ export class AuthService {
 
   get isLoggedIn(): boolean {
     let authToken = localStorage.getItem('volttoken');
-    return authToken !== null ? true : false;
+    var signedin = authToken !== null ? true : false;
+    return signedin;
+
   }
 
   get token(): string | null {
@@ -58,23 +69,18 @@ export class AuthService {
     return authToken;
   }
 
+  get currentAccount(): Account | null {
+    var userData = localStorage.getItem('user')!;
+    let currentUser:Account = JSON.parse(userData);
+    return currentUser!;
+  }
+
   doLogout() {
     let removeToken = localStorage.removeItem('volttoken');
+    localStorage.removeItem('user');
     if (removeToken == null) {
       this.router.navigate(['login']);
     }
   }
 
-  // Error
-  handleError(error: HttpErrorResponse) {
-    let msg = '';
-    if (error.error instanceof ErrorEvent) {
-      // client-side error
-      msg = error.error.message;
-    } else {
-      // server-side error
-      msg = `Error Code: ${error.status}\nMessage: ${error.message}`;
-    }
-    return throwError(msg);
-  }
 }

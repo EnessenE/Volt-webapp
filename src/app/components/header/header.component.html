@@ -1,16 +1,63 @@
-<ul class="nav flex-column">
-    <li class="nav-item">
-        <a class="nav-link" href="#">Home</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#">Home 2</a>
-    </li>
-    <li>
-        <a *ngIf="!this.authService.isLoggedIn" class="btn btn-outline-primary" routerLinkActive="active"
-            routerLinkActive="active" routerLink="/signup">Sign up</a>
+<ng-template #content let-modal class="search">
+    <div class="modal-header">
+        <h4 class="modal-title">Modal title</h4>
+        <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+    </div>
+    <div class="modal-body">
+
+        <div class="container">
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"
+                    (input)="onSearchInputChange($event)">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+            </form>
+
+            <tr *ngFor="let foundUser of foundUsers">
+                <p>Found: <a routerLink="/user/{{foundUser.id}}"
+                        (click)="closeSearch()">{{foundUser.username}}#{{foundUser.discriminator}}</a>
+                </p>
+            </tr>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+    </div>
+</ng-template>
+<div class="header">
+    <ul *ngIf="!this.authService.isLoggedIn" class="nav flex-column">
+        <li>
+            <a class="btn btn-outline-primary" routerLinkActive="active" routerLinkActive="active"
+                routerLink="/signup">Sign
+                up</a>
+        </li>
+        <li>
             <a *ngIf="!this.authService.isLoggedIn" class="btn btn-outline-primary" routerLinkActive="active"
                 routerLinkActive="active" routerLink="/login">Sign in</a>
-        <button (click)="logout()" *ngIf="this.authService.isLoggedIn" type="button"
-            class="btn btn-danger">Logout</button>
-    </li>
-</ul>
+        </li>
+    </ul>
+
+    <ul *ngIf="this.authService.isLoggedIn" class="nav flex-column">
+
+        <tr *ngFor="let chat of chats">
+            <div *ngFor="let member of chat.members">
+                <a routerLink="/chat/{{chat.id}}">
+                    {{member.username}}#{{member.discriminator}},
+                </a>
+            </div>
+            <p>----------</p>
+        </tr>
+
+        <li>
+            <button class="btn btn-outline-primary mb-2 me-2" (click)="searchBarModal(content)">
+                Search
+            </button>
+        </li>
+        <li>
+            <button (click)="logout()" type="button" class="btn btn-danger">Logout</button>
+        </li>
+        <li *ngIf="this.authService.isLoggedIn" class="nav-item">
+            <a class="nav-link"
+                routerLink="/user/{{this.authService.currentAccount?.id}}">{{this.authService.currentAccount?.username}}#{{this.authService.currentAccount?.discriminator}}</a>
+        </li>
+    </ul>
+</div>

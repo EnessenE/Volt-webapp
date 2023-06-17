@@ -1,5 +1,9 @@
 <div class="userDetail">
-    <p>{{currentChat?.receiver?.username || "unknown" }}#{{currentChat?.receiver?.discriminator|| "0000"}}</p>
+    <div *ngFor="let member of currentChat.members">
+        <a routerLink="/chat/{{currentChat.id}}">
+            {{member.username}}#{{member.discriminator}},
+        </a>
+    </div>
 </div>
 
 
