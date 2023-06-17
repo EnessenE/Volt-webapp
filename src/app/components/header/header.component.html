@@ -5,4 +5,12 @@
     <li class="nav-item">
         <a class="nav-link" href="#">Home 2</a>
     </li>
+    <li>
+        <a *ngIf="!this.authService.isLoggedIn" class="btn btn-outline-primary" routerLinkActive="active"
+            routerLinkActive="active" routerLink="/signup">Sign up</a>
+            <a *ngIf="!this.authService.isLoggedIn" class="btn btn-outline-primary" routerLinkActive="active"
+                routerLinkActive="active" routerLink="/login">Sign in</a>
+        <button (click)="logout()" *ngIf="this.authService.isLoggedIn" type="button"
+            class="btn btn-danger">Logout</button>
+    </li>
 </ul>

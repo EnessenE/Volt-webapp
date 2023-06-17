@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { Chat } from 'src/app/classes/chat';
 import { ChatMessage } from 'src/app/classes/chat-message';
+import { AuthService } from 'src/app/services/auth.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -14,13 +15,16 @@ export class PersonalChatComponent implements OnInit {
   latestMessage!: string;
   currentChat!: Chat;
 
-  constructor() {
+  constructor(private authService: AuthService) {
     this.connection = new signalR.HubConnectionBuilder()
       .configureLogging(signalR.LogLevel.Information)
       .withUrl(environment.serverwebsocket, {
         skipNegotiation: true,
-        transport: signalR.HttpTransportType.WebSockets
-      })
+        transport: signalR.HttpTransportType.WebSockets,
+        accessTokenFactory:() => {
+          return this.authService.token!;
+      }})
+      .withAutomaticReconnect()
       .build();
   }
 
@@ -38,13 +42,15 @@ export class PersonalChatComponent implements OnInit {
     
     this.connection.on("ReceiveChatMessage", (data: ChatMessage) => {
       console.log(data);
+      data.message = data.encryptedMessage;
       this.currentChat.messages.push(data);
     });
   }
 
   sendChat(): void {
     var chatMessage: ChatMessage = {
-      message: this.latestMessage
+      encryptedMessage: this.latestMessage,
+      message: ''
     }
     this.connection.invoke("SendChat", chatMessage)
   }
