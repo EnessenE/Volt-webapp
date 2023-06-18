@@ -19,6 +19,17 @@ export class HeaderComponent implements OnInit {
   constructor(public authService: AuthService, private chatService: ChatService, private websocketService: WebsocketService, private modalService: NgbModal) { }
 
   ngOnInit(): void {
+    this.authService.loggedIn$.subscribe(value => {
+      if (value) {
+        console.log("Header says user logged in!")
+        this.LoggedInActions()
+      }
+      else {
+        console.log("Clearing all data as user is logged out.")
+        this.chats = undefined;
+        this.foundUsers = undefined;
+      }
+    });
     if (this.authService.isLoggedIn) {
       this.LoggedInActions()
     }
@@ -34,7 +45,7 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  refreshChats(){
+  refreshChats() {
     console.log("Refreshing chats")
     this.chatService.GetUserChats().subscribe(res => {
       this.chats = res;

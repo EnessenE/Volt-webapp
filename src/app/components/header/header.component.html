@@ -40,7 +40,7 @@
 
         <tr *ngFor="let chat of chats">
             <a routerLink="/dm/{{chat.receiver.id}}">
-                {{chat.receiver.username}}#{{chat.receiver.discriminator}},
+                {{chat.receiver.username}}#{{chat.receiver.discriminator}}
             </a>
             <p>----------</p>
         </tr>

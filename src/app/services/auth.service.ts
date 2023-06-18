@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Account } from '../classes/account';
-import { HttpHeaders, HttpErrorResponse, HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, catchError, map, throwError } from 'rxjs';
+import { Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { LoginRequest } from '../classes/login-request';
 import { LoginResult } from '../classes/login-result';
 import { SignupRequest } from '../classes/signup-request';
-import { WebsocketService } from './websocket.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +15,9 @@ export class AuthService {
   endpoint: string = environment.apiServer + '/v1/auth';
   headers: any;// = new HttpHeaders().set('Content-Type', 'application/json');
   currentUser: Account | undefined;
+  
+  private loggedInSubject = new Subject<boolean>();
+  loggedIn$ = this.loggedInSubject.asObservable();
 
   constructor(private http: HttpClient, public router: Router) { }
   // Sign-up
@@ -43,7 +45,7 @@ export class AuthService {
       .subscribe(res => {
         console.log("Saving login token");
         localStorage.setItem('volttoken', res.token);
-        
+        this.loggedInSubject.next(true);
         this.currentUser = res;
         localStorage.setItem('user', JSON.stringify(this.currentUser));
         this.router.navigate(['dash/']);
@@ -77,6 +79,7 @@ export class AuthService {
   }
 
   doLogout() {
+    this.loggedInSubject.next(false);
     let removeToken = localStorage.removeItem('volttoken');
     localStorage.removeItem('user');
     if (removeToken == null) {
