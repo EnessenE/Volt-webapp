@@ -32,6 +32,6 @@ jobs:
         file: Dockerfile 
         pull: true
         push: true
-        cache-from: type=registry,ref=enes1/reasulus-website:latest
+        cache-from: type=registry,ref=enes1/volt-website:latest
         cache-to: type=inline
-        tags: enes1/reasulus-website:latest
+        tags: enes1/volt-website:latest
