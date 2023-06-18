@@ -22,7 +22,7 @@ FROM nginx:latest
 
 RUN dir -s
 # Copy the build output to replace the default nginx contents.
-COPY --from=build /usr/local/app/dist/volt-webapp /usr/share/nginx/html
+COPY --from=build /usr/local/app/dist/volt /usr/share/nginx/html
 COPY /nginx.docker.conf  /etc/nginx/conf.d/default.conf
 
 # Expose port 80
