@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { Account } from 'src/app/classes/account';
 import { WebsocketService } from 'src/app/services/websocket.service';
 
@@ -10,7 +9,6 @@ import { WebsocketService } from 'src/app/services/websocket.service';
   styleUrls: ['./user-profile.component.scss']
 })
 export class UserProfileComponent {
-  private subscription!: Subscription
   user!: Account;
 
   constructor(private route: ActivatedRoute, private websocketService: WebsocketService) { }

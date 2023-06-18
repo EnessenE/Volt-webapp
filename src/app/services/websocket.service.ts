@@ -26,6 +26,12 @@ export class WebsocketService {
     this.connect()
   }
 
+  async disconnect(): Promise<void>{
+    this.connection.stop();
+    this.connected = false;
+    this.connecting = false;
+  }
+
   async connect(): Promise<void> {
     if (this.authService.isLoggedIn) {
       if (!this.connected && !this.connecting) {
@@ -46,6 +52,7 @@ export class WebsocketService {
       }
     }
     else {
+      this.disconnect();
       console.log("Not building a connection as user is not logged in.")
     }
   }
@@ -59,4 +66,10 @@ export class WebsocketService {
     await this.connect();
     return this.connection.on(methodName, newMethod);
   }
+
+  async disconnectMethod(methodName: string): Promise<void>{
+    console.log("Disconnecting "+methodName)
+    this.connection.off(methodName);
+    console.log("Disconnected "+methodName)
+  } 
 }

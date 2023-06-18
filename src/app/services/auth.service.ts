@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 import { LoginRequest } from '../classes/login-request';
 import { LoginResult } from '../classes/login-result';
 import { SignupRequest } from '../classes/signup-request';
+import { WebsocketService } from './websocket.service';
 
 @Injectable({
   providedIn: 'root'

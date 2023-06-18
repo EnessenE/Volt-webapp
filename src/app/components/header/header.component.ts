@@ -23,25 +23,31 @@ export class HeaderComponent implements OnInit {
       this.LoggedInActions()
     }
   }
+
+
   LoggedInActions() {
 
-
-    this.websocketService.connectMethod("ReceiveChatMessage", (data: ChatMessage) => {
-      console.log("New message!");
+    this.refreshChats();
+    this.websocketService.connectMethod("ReceiveChatMessage", (chat: Chat, data: ChatMessage) => {
+      console.log("New message " + data.encryptedMessage);
+      this.refreshChats();
     });
+  }
 
+  refreshChats(){
+    console.log("Refreshing chats")
     this.chatService.GetUserChats().subscribe(res => {
       this.chats = res;
       console.log(`Got ${this.chats?.length} chats`)
       console.log(this.chats);
-    });;
+    });
   }
 
   searchBarModal(content: any) {
     this.modalService.open(content, { centered: true });
   }
 
-  closeSearch(){
+  closeSearch() {
     this.foundUsers = undefined;
     this.modalService.dismissAll();
 
@@ -56,7 +62,8 @@ export class HeaderComponent implements OnInit {
   }
 
   logout() {
-    this.authService.doLogout()
+    this.authService.doLogout();
+    this.websocketService.disconnect();
   }
 
 }

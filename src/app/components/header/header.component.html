@@ -1,6 +1,6 @@
 <ng-template #content let-modal class="search">
     <div class="modal-header">
-        <h4 class="modal-title">Modal title</h4>
+        <h4 class="modal-title">Search a user</h4>
         <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
     </div>
     <div class="modal-body">
@@ -39,11 +39,9 @@
     <ul *ngIf="this.authService.isLoggedIn" class="nav flex-column">
 
         <tr *ngFor="let chat of chats">
-            <div *ngFor="let member of chat.members">
-                <a routerLink="/chat/{{chat.id}}">
-                    {{member.username}}#{{member.discriminator}},
-                </a>
-            </div>
+            <a routerLink="/dm/{{chat.receiver.id}}">
+                {{chat.receiver.username}}#{{chat.receiver.discriminator}},
+            </a>
             <p>----------</p>
         </tr>
 

@@ -8,9 +8,9 @@
     <ng-template #userfound>
         <h1>{{user.username}}#{{user.discriminator}}</h1>
         <p>ID: {{user.id}}</p>
+        <button type="button" class="btn btn-link" routerLink="/dm/{{user.id}}">Chat with {{user.username}}</button>
     </ng-template>
     <ng-template #nouserfound>
         <h1>We couldn't figure out who this is</h1>
     </ng-template>
-
 </div>

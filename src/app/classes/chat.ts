@@ -5,4 +5,6 @@ export class Chat {
     id!: string;
     messages!: ChatMessage[];
     members!:Account[];
+    receiver!:Account;
+    sender!:Account;
 }

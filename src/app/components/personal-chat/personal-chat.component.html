@@ -1,28 +1,27 @@
-<div class="userDetail">
-    <div *ngFor="let member of currentChat.members">
-        <a routerLink="/chat/{{currentChat.id}}">
-            {{member.username}}#{{member.discriminator}},
-        </a>
+<ng-template [ngIf]="currentTarget">
+    <div class="userDetail">
+        <h1>
+            Chat with: {{currentTarget.username}}#{{currentTarget.discriminator}}
+        </h1>
     </div>
-</div>
+</ng-template>
 
+<ng-template [ngIf]="currentChat">
+    <div class="scrollable-div">
 
-<div class="scrollable-div">
-    <ng-template *ngIf="currentChat;then chat else empty_chat">
-    </ng-template>
-
-    <ng-template #chat>
-        <tr *ngFor="let chatMessage of currentChat.messages">
+        <p *ngFor="let chatMessage of currentChat.messages">
             <app-chat [currentChat]="currentChat" [chatMessage]="chatMessage"></app-chat>
-        </tr>
-    </ng-template>
-    <ng-template #empty_chat>
-        <h1>Send your first message with this cool person!</h1>
-    </ng-template>
+        </p>
 
-</div>
+    </div>
+</ng-template>
+
+<ng-template [ngIf]="!currentChat">
+    <h3>Send your first message with this cool person!</h3>
+</ng-template>
+
 <form (ngSubmit)="sendChat()">
     <label for="chatmessage">Chat Message:</label>
     <input type="text" id="chatmessage" [(ngModel)]="latestMessage" name="chatmessage">
     <button type="submit">Submit</button>
-</form> 
+</form>

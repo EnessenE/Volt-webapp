@@ -1,7 +1,9 @@
 .scrollable-div {
-    height: 95vh;
-    /* Adjust the height as needed */
+    height: 90vh;
     background-color: aquamarine;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .userDetail p {
