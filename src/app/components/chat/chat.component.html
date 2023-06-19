@@ -1,1 +1,3 @@
-<p>{{chatMessage?.sender?.username || "unknown" }}#{{chatMessage?.sender?.discriminator|| "0000"}} {{chatMessage.encryptedMessage}}</p>
+<p>{{ chatMessage.created | date:'HH:mm'}} <b>{{chatMessage?.sender?.username || "unknown"
+        }}#{{chatMessage?.sender?.discriminator|| "0000"}}</b>:</p>
+<p>{{chatMessage.encryptedMessage}}</p>

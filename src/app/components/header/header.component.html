@@ -23,39 +23,145 @@
         <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
     </div>
 </ng-template>
+
+
+
 <div class="header">
-    <ul *ngIf="!this.authService.isLoggedIn" class="nav flex-column">
-        <li>
-            <a class="btn btn-outline-primary" routerLinkActive="active" routerLinkActive="active"
-                routerLink="/signup">Sign
-                up</a>
-        </li>
-        <li>
-            <a *ngIf="!this.authService.isLoggedIn" class="btn btn-outline-primary" routerLinkActive="active"
-                routerLinkActive="active" routerLink="/login">Sign in</a>
-        </li>
-    </ul>
+    <div class="container">
+        <div class="row text-center overflow-y-auto">
+            <ng-template [ngIf]="this.authService.isLoggedIn">
+                <div class="col-12 item">
+                    <button class="btn btn-primary" (click)="searchBarModal(content)">
+                        Search
+                    </button>
+                </div>
+                <hr />
+            </ng-template>
+        </div>
+    </div>
+</div>
 
-    <ul *ngIf="this.authService.isLoggedIn" class="nav flex-column">
+<div class="header">
+    <div class="container">
+        <div class="row text-center overflow-y-auto user-chat-box">
+            <ng-template [ngIf]="this.authService.isLoggedIn">
 
-        <tr *ngFor="let chat of chats">
-            <a routerLink="/dm/{{chat.receiver.id}}">
-                {{chat.receiver.username}}#{{chat.receiver.discriminator}}
-            </a>
-            <p>----------</p>
-        </tr>
 
-        <li>
-            <button class="btn btn-outline-primary mb-2 me-2" (click)="searchBarModal(content)">
-                Search
-            </button>
-        </li>
-        <li>
-            <button (click)="logout()" type="button" class="btn btn-danger">Logout</button>
-        </li>
-        <li *ngIf="this.authService.isLoggedIn" class="nav-item">
-            <a class="nav-link"
-                routerLink="/user/{{this.authService.currentAccount?.id}}">{{this.authService.currentAccount?.username}}#{{this.authService.currentAccount?.discriminator}}</a>
-        </li>
-    </ul>
+                <div *ngFor="let chat of chats" class="col-12 chat-head text-center item">
+                    <a routerLink="/dm/{{chat.receiver.id}}">
+                        {{chat.receiver.username}}#{{chat.receiver.discriminator}}
+                    </a>
+                </div>
+                <hr />
+                <div class="col-12 item">
+                    <p>ඞ guilds here</p>
+                </div>
+                <div class="col-12 item">
+                    <p>ඞ guilds here</p>
+                </div>
+                <div class="col-12 item">
+                    <p>ඞ guilds here</p>
+                </div>
+                <div class="col-12 item">
+                    <p>ඞ guilds here</p>
+                </div>
+                <div class="col-12 item">
+                    <p>ඞ guilds here</p>
+                </div>
+                <div class="col-12 item">
+                    <p>ඞ guilds here</p>
+                </div>
+                <div class="col-12 item">
+                    <p>ඞ guilds here</p>
+                </div>
+                <div class="col-12 item">
+                    <p>ඞ guilds here</p>
+                </div>
+                <div class="col-12 item">
+                    <p>ඞ guilds here</p>
+                </div>
+                <div class="col-12 item">
+                    <p>ඞ guilds here</p>
+                </div>
+                <div class="col-12 item">
+                    <p>ඞ guilds here</p>
+                </div>
+                <div class="col-12 item">
+                    <p>ඞ guilds here</p>
+                </div>
+                <div class="col-12 item">
+                    <p>ඞ guilds here</p>
+                </div>
+                <div class="col-12 item">
+                    <p>ඞ guilds here</p>
+                </div>
+                <div class="col-12 item">
+                    <p>ඞ guilds here</p>
+                </div>
+                <div class="col-12 item">
+                    <p>ඞ guilds here</p>
+                </div>
+                <div class="col-12 item">
+                    <p>ඞ guilds here</p>
+                </div>
+                <div class="col-12 item">
+                    <p>ඞ guilds here</p>
+                </div>
+                <div class="col-12 item">
+                    <p>ඞ guilds here</p>
+                </div>
+                <div class="col-12 item">
+                    <p>ඞ guilds here</p>
+                </div>
+                <div class="col-12 item">
+                    <p>ඞ guilds here</p>
+                </div>
+                <div class="col-12 item">
+                    <p>ඞ guilds here</p>
+                </div>
+                <div class="col-12 item">
+                    <p>ඞ guilds here</p>
+                </div>
+                <div class="col-12 item">
+                    <p>ඞ guilds here</p>
+                </div>
+                <div class="col-12 item">
+                    <p>ඞ guilds here</p>
+                </div>
+                <div class="col-12 item">
+                    <p>ඞ guilds here</p>
+                </div>
+                <div class="col-12 item">
+                    <p>ඞ guilds here</p>
+                </div>
+                <div class="col-12 item">
+                    <p>ඞ guilds here</p>
+                </div>
+                <div class="col-12 item">
+                    <p>ඞ guilds here</p>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row text-center">
+            <div *ngIf="!this.authService.isLoggedIn" class="col-12">
+                <a class="btn btn-outline-primary" routerLinkActive="active" routerLinkActive="active"
+                    routerLink="/signup">Sign up</a>
+                <a *ngIf="!this.authService.isLoggedIn" class="btn btn-outline-primary" routerLinkActive="active"
+                    routerLinkActive="active" routerLink="/login">Sign in</a>
+            </div>
+
+            <ng-template [ngIf]="this.authService.isLoggedIn">
+                <hr />
+                <div *ngIf="this.authService.isLoggedIn" class="col-12">
+                    <a class="nav-link item"
+                        routerLink="/user/{{this.authService.currentAccount?.id}}">{{this.authService.currentAccount?.username}}#{{this.authService.currentAccount?.discriminator}}</a>
+                </div>
+                <div class="col-12 item">
+                    <button (click)="logout()" type="button" class="btn btn-danger">Logout</button>
+                </div>
+            </ng-template>
+        </div>
+    </div>
 </div>

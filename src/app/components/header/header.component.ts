@@ -48,6 +48,13 @@ export class HeaderComponent implements OnInit {
   refreshChats() {
     console.log("Refreshing chats")
     this.chatService.GetUserChats().subscribe(res => {
+      res.forEach(chat => {
+        if (chat.receiver.id == this.authService.currentAccount?.id){
+          var sender = chat.sender;
+          chat.sender = chat.receiver;
+          chat.receiver = sender;
+        }
+      });
       this.chats = res;
       console.log(`Got ${this.chats?.length} chats`)
       console.log(this.chats);

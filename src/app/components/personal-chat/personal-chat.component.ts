@@ -1,12 +1,10 @@
-import { AfterViewChecked, Component, ElementRef, HostListener, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import * as signalR from '@microsoft/signalr';
 import { Account } from 'src/app/classes/account';
 import { Chat } from 'src/app/classes/chat';
 import { ChatMessage } from 'src/app/classes/chat-message';
 import { AuthService } from 'src/app/services/auth.service';
 import { WebsocketService } from 'src/app/services/websocket.service';
-import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-personal-chat',
@@ -55,7 +53,7 @@ export class PersonalChatComponent implements OnInit, OnDestroy, AfterViewChecke
       this.currentEventListener?.off()
       console.log(params);
       var id = params['id'];
-      this.currentTarget = await this.websocketService.invoke("GetUser", id);
+      this.currentTarget = await this.websocketService.invoke<Account>("GetUser", id);
       console.log("Chatting with " + this.currentTarget?.username + "#" + this.currentTarget?.discriminator)
 
 
@@ -67,14 +65,13 @@ export class PersonalChatComponent implements OnInit, OnDestroy, AfterViewChecke
 
 
 
-    this.currentEventListener = await this.websocketService.connectMethod("ReceiveChatMessage", (data: ChatMessage) => {
+    this.currentEventListener = await this.websocketService.connectMethod("ReceiveChatMessage", async (data: ChatMessage) => {
       console.log("uh current chat is: " + this.currentChat)
-      if (this.currentChat == null || this.currentChat.id == data.chatId) {
+      if ((this.currentChat != null && this.currentChat.id == data.chatId) || (data.receiver?.id == this.currentTarget?.id || data.sender?.id == this.currentTarget?.id)) {
         console.log("Got a new message in this chat: " + data);
         console.log("Got a new message in this chat: " + data.encryptedMessage);
+        this.currentChat = await this.websocketService.invoke<Chat>("GetChat", this.currentTarget?.id); 
         data.message = data.encryptedMessage;
-        this.currentChat?.messages.push(data);
-        this.scrollToBottom();
       }
       else {
         console.log("Got a message for a different chat")
@@ -83,11 +80,9 @@ export class PersonalChatComponent implements OnInit, OnDestroy, AfterViewChecke
   }
 
   scrollToBottom() {
-    console.log("Scrolling...")
     const element = this.chatDiv?.nativeElement;
     if (element) {
       this.renderer.setProperty(element, 'scrollTop', element.scrollHeight)
-      console.log("Scrolled!")
     };
   }
 

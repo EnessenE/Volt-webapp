@@ -6,7 +6,7 @@
     </div>
 </ng-template>
 
-<div #chatDiv class="scrollable-div overflow-auto" (scroll)="onScroll($event)">
+<div #chatDiv class="scrollable-div overflow-y-auto" (scroll)="onScroll($event)">
     <ng-template [ngIf]="currentChat">
 
         <p *ngFor="let chatMessage of currentChat.messages">
@@ -24,4 +24,7 @@
     <label for="chatmessage">Chat Message:</label>
     <input type="text" id="chatmessage" [(ngModel)]="latestMessage" name="chatmessage">
     <button type="submit">Submit</button>
+
+    <p *ngIf="stayAtBottom" style="color: green">Staying at bottom</p>
+    <p *ngIf="!stayAtBottom" style="color: red">not Staying at bottom</p>
 </form>

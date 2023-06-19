@@ -6,6 +6,7 @@ import { LoginComponent } from './components/login/login.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { TestPageComponent } from './components/test-page/test-page.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -14,6 +15,7 @@ const routes: Routes = [
   { path: 'dash', component: DashboardComponent, canActivate: [AuthGuard]  },
   { path: 'dm/:id', component: PersonalChatComponent, canActivate: [AuthGuard] },
   { path: 'user/:id', component: UserProfileComponent, canActivate: [AuthGuard] },
+  { path: 'test', component: TestPageComponent },
 ];
 
 @NgModule({

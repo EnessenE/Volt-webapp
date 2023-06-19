@@ -15,6 +15,7 @@ import { SignupComponent } from './components/signup/signup.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { WebsocketService } from './services/websocket.service';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { TestPageComponent } from './components/test-page/test-page.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
     LoginComponent,
     SignupComponent,
     DashboardComponent,
-    UserProfileComponent
+    UserProfileComponent,
+    TestPageComponent
   ],
   imports: [
     BrowserModule,

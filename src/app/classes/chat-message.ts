@@ -6,4 +6,5 @@ export class ChatMessage {
     sender?: Account;
     receiver?: Account;
     chatId?: string;
+    created?: Date;
 }
