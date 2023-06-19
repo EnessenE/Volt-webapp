@@ -39,7 +39,7 @@ export class HeaderComponent implements OnInit {
   LoggedInActions() {
 
     this.refreshChats();
-    this.websocketService.connectMethod("ReceiveChatMessage", (chat: Chat, data: ChatMessage) => {
+    this.websocketService.connectMethod("ReceiveChatMessage", (data: ChatMessage) => {
       console.log("New message " + data.encryptedMessage);
       this.refreshChats();
     });
