@@ -7,15 +7,17 @@ import { SignupComponent } from './components/signup/signup.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
 import { TestPageComponent } from './components/test-page/test-page.component';
+import { VoiceTestPageComponent } from './components/voice-test-page/voice-test-page.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
-  { path: 'dash', component: DashboardComponent, canActivate: [AuthGuard]  },
+  { path: 'dash', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: 'dm/:id', component: PersonalChatComponent, canActivate: [AuthGuard] },
   { path: 'user/:id', component: UserProfileComponent, canActivate: [AuthGuard] },
   { path: 'test', component: TestPageComponent },
+  { path: 'voicetest', component: VoiceTestPageComponent, canActivate: [AuthGuard] },
 ];
 
 @NgModule({

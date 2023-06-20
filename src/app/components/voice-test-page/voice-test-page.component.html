@@ -1,0 +1,13 @@
+<h1>Hi</h1>
+<div>
+    <h1>Audio Stream</h1>
+    <button (click)="startStreaming()">Start Streaming</button>
+    <div *ngIf="audioStream | async as audioBuffer">
+        <p>Current audio buffer:</p>
+        <ul>
+            <p *ngFor="let channelData of getChannelData(audioBuffer)">
+                {{ channelData }}
+            </p>
+        </ul>
+    </div>
+</div>
