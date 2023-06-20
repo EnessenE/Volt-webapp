@@ -7,4 +7,5 @@ export class Chat {
     members!:Account[];
     receiver!:Account;
     sender!:Account;
+    encryptionKey!: string;
 }
