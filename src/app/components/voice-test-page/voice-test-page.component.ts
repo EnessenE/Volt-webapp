@@ -10,15 +10,15 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./voice-test-page.component.scss']
 })
 export class VoiceTestPageComponent {
-  mediaRecorder?: MediaRecorder;
-  audioChunks: Blob[] = [];
-  isRecording = false;
   private connection: signalR.HubConnection;
   connected: boolean = false;
   connecting: boolean = false;
-  audioStream!: Observable<AudioBuffer>;
   isStreaming: boolean = false;
   currentData: any;
+
+
+  private audioContext?: AudioContext;
+  private mediaStream?: MediaStream;
 
   constructor(private authService: AuthService) {
     this.connection = new signalR.HubConnectionBuilder()
@@ -36,33 +36,40 @@ export class VoiceTestPageComponent {
   }
 
   ngOnInit() {
-    // Check browser compatibility
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      console.error('getUserMedia is not supported');
-      return;
-    }
+    this.audioContext = new AudioContext();
+    this.registerAudioDataHandler();
+    this.registerStreaming();
   }
 
+  registerStreaming(){
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(stream => {
+        this.mediaStream = stream;
+        const audioSource = this.audioContext!.createMediaStreamSource(stream);
+        const scriptProcessor = this.audioContext!.createScriptProcessor(4096, 1, 1);
+
+        audioSource.connect(scriptProcessor);
+        scriptProcessor.connect(this.audioContext!.destination);
+
+        scriptProcessor.addEventListener('audioprocess', (event) => {
+          const inputBuffer = event.inputBuffer;
+          const inputData = inputBuffer.getChannelData(0);
+          const dataToSend = new Float32Array(inputData.length);
+          dataToSend.set(inputData);
+
+          if (this.isStreaming) {
+            this.connection.invoke('SendAudioData', dataToSend); // Invoke your server-side method to send audio data
+          }
+        });
+      })
+      .catch(error => console.error(`Error accessing microphone: ${error}`));
+  }
 
   startStreaming() {
-    if (!this.isStreaming) {
-      this.isStreaming = true;
-
-      // Request audio stream from the user's microphone
-      navigator.mediaDevices.getUserMedia({ audio: true })
-        .then(stream => this.handleAudioStream(stream))
-        .catch(error => console.error('Error accessing microphone:', error));
-    } else {
-      console.warn('Streaming is already in progress.');
-    }
+    this.isStreaming = true;
   }
-
-  getChannelData(audioBuffer: AudioBuffer): Float32Array[] {
-    const channelData: Float32Array[] = [];
-    for (let channel = 0; channel < audioBuffer.numberOfChannels; channel++) {
-      channelData.push(audioBuffer.getChannelData(channel));
-    }
-    return channelData;
+  stopStreaming() {
+    this.isStreaming = false;
   }
 
   async connect(): Promise<void> {
@@ -90,6 +97,21 @@ export class VoiceTestPageComponent {
     }
   }
 
+  registerAudioDataHandler() {
+    this.connection.on('ReceiveAudioData', (audioData: Float32Array) => {
+      // Process received audio data as per your requirements
+      console.log('Received audio data:', audioData);
+
+      // Example: Play the audio data through the Web Audio API
+      const audioBuffer = this.audioContext!.createBuffer(1, audioData.length, this.audioContext!.sampleRate);
+      audioBuffer.getChannelData(0).set(audioData);
+      const audioSource = this.audioContext!.createBufferSource();
+      audioSource.buffer = audioBuffer;
+      audioSource.connect(this.audioContext!.destination);
+      audioSource.start();
+    });
+  }
+
   async disconnect(): Promise<void> {
     this.connection.stop();
     this.connected = false;
@@ -97,53 +119,4 @@ export class VoiceTestPageComponent {
   }
 
 
-
-  handleAudioStream(stream: MediaStream) {
-    console.log("Trying to handle audio stream...")
-    const audioContext = new AudioContext();
-    const source = audioContext.createMediaStreamSource(stream);
-
-    // Create an Observable that emits the audio stream data 
-    this.audioStream = new Observable<AudioBuffer>(observer => {
-      console.log("Trying to handle AudioBuffer...")
-
-      const bufferSize = 2048;
-      const scriptProcessor = audioContext.createScriptProcessor(bufferSize, 1, 1);
-
-      scriptProcessor.onaudioprocess = event => {
-        const audioBuffer = event.inputBuffer;
-        console.log("data in buffer! Size: " + audioBuffer.length)
-
-        const [left] = [audioBuffer.getChannelData(0)]
-        const interleaved = new Float32Array(left.length)
-        for (let src = 0, dst = 0; src < left.length; src++, dst += 2) {
-          interleaved[dst] = left[src]
-        }
-
-
-        //this.connection.invoke("SendAudio", audioBuffer);
-        this.play(interleaved);
-        observer.next(audioBuffer);
-      };
-
-      source.connect(scriptProcessor);
-      scriptProcessor.connect(audioContext.destination);
-
-      return () => {
-        scriptProcessor.disconnect();
-        source.disconnect();
-      };
-    });
-
-  }
-
-  async play(data: ArrayBuffer) {
-    console.log("Trying to replay something of length: " + data.byteLength)
-    const context = new AudioContext();
-    const buffer = await context.decodeAudioData(data);
-    const source = context.createBufferSource();
-    source.buffer = buffer;
-    source.connect(context.destination);
-    source.start();
-  }
 }
