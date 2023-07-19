@@ -1,5 +1,8 @@
 # Volt
+An project mess around with chats, websockets and api's while shoving encryption into it. Essentially an encrypted discord clone.
 
+
+# How to play with
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.1.0.
 
 ## Development server
