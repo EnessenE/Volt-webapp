@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Account } from 'src/app/classes/account';
+import { ApiInformation } from 'src/app/classes/apiinformation';
 import { Chat } from 'src/app/classes/chat';
 import { ChatMessage } from 'src/app/classes/chat-message';
 import { AuthService } from 'src/app/services/auth.service';
@@ -15,10 +16,12 @@ import { WebsocketService } from 'src/app/services/websocket.service';
 export class HeaderComponent implements OnInit {
   chats: Chat[] | undefined;
   foundUsers: Account[] | undefined;
+  apiInformation?: ApiInformation;
 
   constructor(public authService: AuthService, private chatService: ChatService, private websocketService: WebsocketService, private modalService: NgbModal) { }
 
   ngOnInit(): void {
+    this.getApiInformation();
     this.authService.loggedIn$.subscribe(value => {
       if (value) {
         console.log("Header says user logged in!")
@@ -35,9 +38,13 @@ export class HeaderComponent implements OnInit {
     }
   }
 
+  getApiInformation(){
+    this.chatService.GetApiInfo().subscribe(value => {
+      this.apiInformation = value;
+    })
+  }
 
   LoggedInActions() {
-
     this.refreshChats();
     this.websocketService.connectMethod("ReceiveChatMessage", (data: ChatMessage) => {
       console.log("New message " + data.encryptedMessage);
@@ -49,7 +56,7 @@ export class HeaderComponent implements OnInit {
     console.log("Refreshing chats")
     this.chatService.GetUserChats().subscribe(res => {
       res.forEach(chat => {
-        if (chat.receiver.id == this.authService.currentAccount?.id){
+        if (chat.receiver.id == this.authService.currentAccount?.id) {
           var sender = chat.sender;
           chat.sender = chat.receiver;
           chat.receiver = sender;

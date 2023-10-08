@@ -1,6 +1,13 @@
 <h1>Hi</h1>
 <div>
     <h1>Audio Stream</h1>
-    <button (click)="startStreaming()">Start!</button>
+    <!-- <button (click)="startStreaming()">Start!</button>
     <button (click)="stopStreaming()">Stop!</button>
+    <a *ngFor="let speaker of currentlySpeaking" class="col-12 chat-head text-center item"
+        routerLink="/dm/{{speaker.id}}">
+        <div>
+            <b>{{speaker.username}}#{{speaker.discriminator}}</b> is currently speaking.
+        </div>
+    </a> -->
+    <h1>Currently disabled</h1>
 </div>

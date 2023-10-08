@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
+import { ApiInformation } from '../classes/apiinformation';
 
 @Injectable({
   providedIn: 'root'
@@ -18,5 +19,9 @@ export class ChatService {
     headers = headers.set('Authorization', 'bearer ' + this.authService.token);
 
     return this.http.get<Chat[]>(`${this.endpoint}/mine`, { headers: headers })
+  }  
+  
+  GetApiInfo(): Observable<ApiInformation> {
+    return this.http.get<ApiInformation>(`${environment.apiServer}/v1/info`)
   }
 }

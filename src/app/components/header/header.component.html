@@ -45,17 +45,15 @@
     <div class="container">
         <div class="row text-center overflow-y-auto user-chat-box">
             <ng-template [ngIf]="this.authService.isLoggedIn">
-
-
-                <div *ngFor="let chat of chats" class="col-12 chat-head text-center item">
-                    <a routerLink="/dm/{{chat.receiver.id}}">
-                        {{chat.receiver.username}}#{{chat.receiver.discriminator}}
-                    </a>
-                </div>
+                <a *ngFor="let chat of chats" class="col-12 chat-head text-center item"
+                    routerLink="/dm/{{chat.receiver.id}}">
+                    {{chat.receiver.username}}#{{chat.receiver.discriminator}}
+                </a>
                 <hr />
                 <a routerLink="/voicetest">
                     Voice test
                 </a>
+                <hr />
                 <div class="col-12 item">
                     <p>ඞ guilds here</p>
                 </div>
@@ -162,6 +160,9 @@
                     <button (click)="logout()" type="button" class="btn btn-danger">Logout</button>
                 </div>
             </ng-template>
+            <div class="col-12 item">
+                <p class="tiny-text">{{ apiInformation?.version }} - {{ apiInformation?.host }}</p>
+            </div>
         </div>
     </div>
 </div>

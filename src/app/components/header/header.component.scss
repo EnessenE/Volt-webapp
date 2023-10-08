@@ -7,7 +7,7 @@
 }
 
 .chat-head {
-    background-color: black;
+    background-color: rgb(21, 185, 214);
     min-width: 100%;
     margin-top: 1%;
     min-height: 5vh;
@@ -32,6 +32,10 @@ hr {
     border-top: 1px solid pink;
 }
 
-.user-chat-box{
+.user-chat-box {
     height: 85vh;
+}
+
+.tiny-text {
+    font-size: xx-small;
 }

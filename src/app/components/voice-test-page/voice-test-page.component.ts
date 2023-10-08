@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { Observable } from 'rxjs';
+import { Account } from 'src/app/classes/account';
 import { AuthService } from 'src/app/services/auth.service';
 import { environment } from 'src/environments/environment';
 
@@ -15,6 +16,7 @@ export class VoiceTestPageComponent {
   connecting: boolean = false;
   isStreaming: boolean = false;
   currentData: any;
+  currentlySpeaking: Array<Account> = [];
 
 
   private audioContext?: AudioContext;
@@ -39,9 +41,13 @@ export class VoiceTestPageComponent {
     this.audioContext = new AudioContext();
     this.registerAudioDataHandler();
     this.registerStreaming();
+    navigator.mediaDevices.getUserMedia({
+      audio: true,
+      video: true
+    });
   }
 
-  registerStreaming(){
+  registerStreaming() {
     navigator.mediaDevices.getUserMedia({ audio: true })
       .then(stream => {
         this.mediaStream = stream;
@@ -98,17 +104,34 @@ export class VoiceTestPageComponent {
   }
 
   registerAudioDataHandler() {
-    this.connection.on('ReceiveAudioData', (audioData: Float32Array) => {
+    this.connection.on('ReceiveAudioData', (voiceData: VoiceData) => {
       // Process received audio data as per your requirements
-      console.log('Received audio data:', audioData);
+      console.log('Received audio data:', voiceData);
+      this.currentlySpeaking.push(voiceData.speaker);
 
-      // Example: Play the audio data through the Web Audio API
-      const audioBuffer = this.audioContext!.createBuffer(1, audioData.length, this.audioContext!.sampleRate);
-      audioBuffer.getChannelData(0).set(audioData);
-      const audioSource = this.audioContext!.createBufferSource();
-      audioSource.buffer = audioBuffer;
-      audioSource.connect(this.audioContext!.destination);
-      audioSource.start();
+      let onFinish = () => {
+        this.currentlySpeaking.forEach((item, index) => {
+          if (item === voiceData.speaker) this.currentlySpeaking.splice(index, 1);
+        });
+      }
+      console.log(voiceData.audioData)
+      var rawAudioData = Array.from(voiceData.audioData);
+      var audioData = new Float32Array(JSON.parse(voiceData.audioData));
+      console.log("Audio size: " + audioData.length);
+      if (audioData.length > 0) {
+        // Example: Play the audio data through the Web Audio API
+        const audioBuffer = this.audioContext!.createBuffer(1, audioData.length, this.audioContext!.sampleRate);
+        audioBuffer.getChannelData(0).set(audioData);
+        this.audioContext!.addEventListener('ended', onFinish);
+        const audioSource = this.audioContext!.createBufferSource();
+        audioSource.buffer = audioBuffer;
+        audioSource.connect(this.audioContext!.destination);
+        audioSource.start();
+      }
+      else {
+        console.log("Got audio data but it was empty")
+        onFinish();
+      }
     });
   }
 
@@ -119,4 +142,9 @@ export class VoiceTestPageComponent {
   }
 
 
+}
+
+class VoiceData {
+  audioData!: string;
+  speaker!: Account;
 }
